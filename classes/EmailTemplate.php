@@ -34,10 +34,11 @@ class EmailTemplate {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function createTemplate($title, $content, $status, $created_by) {
-        $query = "INSERT INTO " . $this->table_name . " (title, content, status, created_by) VALUES (:title, :content, :status, :created_by)";
+    public function createTemplate($title, $content, $status, $created_by, $country, $category) {
+        $query = "INSERT INTO " . $this->table_name . " (title, content, status, created_by, country, category) VALUES (:title, :content, :status, :created_by, :country, :category)";
         $stmt = $this->conn->prepare($query);
-        
+        $stmt->bindParam(':country', $country);
+        $stmt->bindParam(':category', $category);
         $stmt->bindParam(':title', $title);
         $stmt->bindParam(':content', $content);
         $stmt->bindParam(':status', $status);
@@ -94,7 +95,7 @@ class EmailTemplate {
         }
 
         $new_title = $template['title'] . ' (Copy)';
-        return $this->createTemplate($new_title, $template['content'], $template['status'], $created_by);
+        return $this->createTemplate($new_title, $template['content'], $template['status'], $created_by,$template['country'],$template['category']);
     }
 }
 ?>

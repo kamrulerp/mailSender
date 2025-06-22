@@ -31,9 +31,15 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="../mail/history.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'history.php') ? 'active' : ''; ?>">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Email History</p>
+                    </a>
+                </li>
 
                 <!-- Email Management -->
-                <li class="nav-item <?php echo (strpos($_SERVER['REQUEST_URI'], 'mail') !== false) ? 'menu-open' : ''; ?>">
+                <!-- <li class="nav-item <?php echo (strpos($_SERVER['REQUEST_URI'], 'mail') !== false) ? 'menu-open' : ''; ?>">
                     <a href="#" class="nav-link <?php echo (strpos($_SERVER['REQUEST_URI'], 'mail') !== false) ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-envelope"></i>
                         <p>
@@ -55,7 +61,79 @@
                             </a>
                         </li>
                     </ul>
+                </li> -->
+
+                <?php if ($auth->canAccessCountryMenu('Australia')): ?>
+                <li class="nav-item <?php echo (strpos($_SERVER['REQUEST_URI'], 'austrailia') !== false) ? 'menu-open' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo (strpos($_SERVER['REQUEST_URI'], 'austrailia') !== false) ? 'active' : ''; ?>">
+                        <i class="nav-icon fas fa-envelope"></i>
+                        <p>
+                            Australia Emails
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <?php if ($auth->canAccessCategoryMenu('File Submission')): ?>
+                        <li class="nav-item">
+                            <a href="../austrailia/file_submission.php?country=Australia&category=File Submission" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'file_submission.php') ? 'active' : ''; ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>File Submission</p>
+                            </a>
+                        </li>
+                        <?php endif; ?>
+                        <?php if ($auth->canAccessCategoryMenu('Payment Received')): ?>
+                        <li class="nav-item">
+                            <a href="../mail/send.php?country=Australia&category=Payment Received" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Payment Receive</p>
+                            </a>
+                        </li>
+                        <?php endif; ?>
+                        <?php if ($auth->canAccessCategoryMenu('Job Offer letter')): ?>
+                        <li class="nav-item">
+                            <a href="../mail/send.php?country=Australia&category=Job Offer letter" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Job Offer Letter</p>
+                            </a>
+                        </li>
+                        <?php endif; ?>
+                        <?php if ($auth->canAccessCategoryMenu('Required Documents')): ?>
+                        <li class="nav-item">
+                            <a href="../mail/send.php?country=Australia&category=Required Documents" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Required documents</p>
+                            </a>
+                        </li>
+                        <?php endif; ?>
+                        <?php if ($auth->canAccessCategoryMenu('Normal Rejection')): ?>
+                        <li class="nav-item">
+                            <a href="../mail/send.php?country=Australia&category=Normal Rejection" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Normal Rejection</p>
+                            </a>
+                        </li>
+                        <?php endif; ?>
+                        <?php if ($auth->canAccessCategoryMenu('Notary Error Rejection')): ?>
+                        <li class="nav-item">
+                            <a href="../mail/send.php?country=Australia&category=Notary Error Rejection" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Notarry Error Rejection</p>
+                            </a>
+                        </li>
+                        <?php endif; ?>
+                        <?php if ($auth->canAccessCategoryMenu('Company Rejection')): ?>
+                        <li class="nav-item">
+                            <a href="../mail/send.php?country=Australia&category=Company Rejection" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Company Rejection</p>
+                            </a>
+                        </li>
+                        <?php endif; ?>
+                    </ul>
                 </li>
+                <?php endif; ?>
+
+
 
                 <!-- Email Templates -->
                 <li class="nav-item <?php echo (strpos($_SERVER['REQUEST_URI'], 'templates') !== false) ? 'menu-open' : ''; ?>">

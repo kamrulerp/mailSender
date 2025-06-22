@@ -15,13 +15,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $title = trim($_POST['title'] ?? '');
     $content = $_POST['content'] ?? '';
     $status = $_POST['status'] ?? 'active';
+    $country = $_POST['country'] ?? '';
+    $category = $_POST['category'] ?? '';
     
     if (empty($title)) {
         $error_message = 'Template title is required';
     } elseif (empty($content)) {
         $error_message = 'Template content is required';
     } else {
-        $template_id = $emailTemplate->createTemplate($title, $content, $status, $user['id']);
+        $template_id = $emailTemplate->createTemplate($title, $content, $status, $user['id'], $country, $category);
         
         if ($template_id) {
             $success_message = 'Template created successfully';
@@ -146,7 +148,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             </div>
                                         </div>
                                     </div>
-                                    
+
+                                    <!--Country and Category-->
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="country" class="form-label">Country</label>
+                                                <select class="form-select" id="country" name="country">
+                                                    <?php
+                                                    $countries = $auth->getCountryList();
+                                                    foreach ($countries as $country):
+                                                    ?>
+                                                    <option value="<?php echo $country; ?>"><?php echo $country; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="category" class="form-label">Category</label>
+                                                <select class="form-select" id="category" name="category">
+                                                    <?php
+                                                    $categories = $auth->getCategoryList();
+                                                    foreach ($categories as $category):
+                                                    ?>
+                                                    <option value="<?php echo $category; ?>"><?php echo $category; ?></option>
+                                                    <?php endforeach; ?>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Template Content-->
                                     <div class="mb-3">
                                         <label for="content" class="form-label">Template Content <span class="text-danger">*</span></label>
                                         <textarea id="content" name="content" class="form-control summernote"><?php echo htmlspecialchars($content ?? ''); ?></textarea>

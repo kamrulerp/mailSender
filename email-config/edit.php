@@ -34,8 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $smtp_username = trim($_POST['smtp_username']);
     $smtp_password = $_POST['smtp_password'];
     $encryption = $_POST['encryption'];
-    $from_email = trim($_POST['from_email']);
     $from_name = trim($_POST['from_name']);
+    $country = $_POST['country'];
+    $category = $_POST['category'];
     $status = $_POST['status'];
     
     // Validation
@@ -57,9 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors[] = 'SMTP username is required';
     }
     
-    if (empty($from_email) || !filter_var($from_email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = 'Valid from email is required';
-    }
     
     if (empty($from_name)) {
         $errors[] = 'From name is required';
@@ -81,6 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $encryption,
             $from_email,
             $from_name,
+            $country,
+            $category,
             $status
         );
         
@@ -227,7 +227,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <div class="form-group">
                                         <label for="encryption">Encryption</label>
                                         <select class="form-control" id="encryption" name="encryption">
-                                            <?php $current_encryption = isset($_POST['encryption']) ? $_POST['encryption'] : $config['encryption']; ?>
+                                            <?php $current_encryption = isset($_POST['encryption']) ? $_POST['encryption'] : $config['encryption_type']; ?>
                                             <option value="tls" <?php echo $current_encryption == 'tls' ? 'selected' : ''; ?>>TLS</option>
                                             <option value="ssl" <?php echo $current_encryption == 'ssl' ? 'selected' : ''; ?>>SSL</option>
                                             <option value="" <?php echo $current_encryption == '' ? 'selected' : ''; ?>>None</option>
@@ -239,19 +239,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="from_email">From Email *</label>
-                                                <input type="email" class="form-control" id="from_email" name="from_email" 
-                                                       value="<?php echo isset($_POST['from_email']) ? htmlspecialchars($_POST['from_email']) : htmlspecialchars($config['from_email']); ?>" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
                                                 <label for="from_name">From Name *</label>
                                                 <input type="text" class="form-control" id="from_name" name="from_name" 
                                                        value="<?php echo isset($_POST['from_name']) ? htmlspecialchars($_POST['from_name']) : htmlspecialchars($config['from_name']); ?>" required>
                                             </div>
                                         </div>
                                     </div>
+                                    <h5 class="mt-4 mb-3">Additional Settings</h5>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="country">Country *</label>
+                                                <select class="form-control" id="country" name="country" required>
+                                                    <?php $current_country = isset($_POST['country']) ? $_POST['country'] : $config['country']; ?>
+                                                    <?php foreach ($auth->getCountryList() as $country): ?>
+                                                        <option value="<?php echo $country; ?>" <?php echo $current_country == $country ? 'selected' : ''; ?>><?php echo $country; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="category">Category *</label>
+                                                <select class="form-control" id="category" name="category" required>
+                                                    <?php $current_category = isset($_POST['category']) ? $_POST['category'] : $config['category']; ?>
+                                                    <?php foreach ($auth->getCategoryList() as $category): ?>
+                                                        <option value="<?php echo $category; ?>" <?php echo $current_category == $category ? 'selected' : ''; ?>><?php echo $category; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
                                 </div>
                                 
                                 <div class="card-footer">

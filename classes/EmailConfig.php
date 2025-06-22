@@ -39,8 +39,9 @@ class EmailConfig {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function createConfig($config_name, $smtp_host, $smtp_port, $smtp_username, $smtp_password, $encryption_type, $email_address, $from_name, $status, $created_by) {
-        $query = "INSERT INTO " . $this->table_name . " (config_name, email_address, smtp_host, smtp_port, smtp_username, smtp_password, encryption_type, from_name, status, created_by) VALUES (:config_name, :email_address, :smtp_host, :smtp_port, :smtp_username, :smtp_password, :encryption_type, :from_name, :status, :created_by)";
+    public function createConfig($config_name, $smtp_host, $smtp_port, $smtp_username, $smtp_password, $encryption_type, $email_address, $from_name, $country, $category, $status, $created_by) {
+
+        $query = "INSERT INTO " . $this->table_name . " (config_name, email_address, smtp_host, smtp_port, smtp_username, smtp_password, encryption_type, from_name, country, category, status, created_by) VALUES (:config_name, :email_address, :smtp_host, :smtp_port, :smtp_username, :smtp_password, :encryption_type, :from_name, :country, :category, :status, :created_by)";
         $stmt = $this->conn->prepare($query);
         
         $stmt->bindParam(':config_name', $config_name);
@@ -51,6 +52,8 @@ class EmailConfig {
         $stmt->bindParam(':smtp_password', $smtp_password);
         $stmt->bindParam(':encryption_type', $encryption_type);
         $stmt->bindParam(':from_name', $from_name);
+        $stmt->bindParam(':country', $country);
+        $stmt->bindParam(':category', $category);
         $stmt->bindParam(':status', $status);
         $stmt->bindParam(':created_by', $created_by);
 
@@ -60,8 +63,8 @@ class EmailConfig {
         return false;
     }
 
-    public function updateConfig($id, $config_name, $email_address, $smtp_host, $smtp_port, $smtp_username, $smtp_password, $encryption_type, $from_name, $status) {
-        $query = "UPDATE " . $this->table_name . " SET config_name = :config_name, email_address = :email_address, smtp_host = :smtp_host, smtp_port = :smtp_port, smtp_username = :smtp_username, smtp_password = :smtp_password, encryption_type = :encryption_type, from_name = :from_name, status = :status WHERE id = :id";
+    public function updateConfig($id, $config_name, $email_address, $smtp_host, $smtp_port, $smtp_username, $smtp_password, $encryption_type, $from_name, $country, $category, $status) {
+        $query = "UPDATE " . $this->table_name . " SET config_name = :config_name, email_address = :email_address, smtp_host = :smtp_host, smtp_port = :smtp_port, smtp_username = :smtp_username, smtp_password = :smtp_password, encryption_type = :encryption_type, from_name = :from_name, country = :country, category = :category, status = :status WHERE id = :id";
         $stmt = $this->conn->prepare($query);
         
         $stmt->bindParam(':id', $id);
@@ -73,6 +76,8 @@ class EmailConfig {
         $stmt->bindParam(':smtp_password', $smtp_password);
         $stmt->bindParam(':encryption_type', $encryption_type);
         $stmt->bindParam(':from_name', $from_name);
+        $stmt->bindParam(':country', $country);
+        $stmt->bindParam(':category', $category);
         $stmt->bindParam(':status', $status);
 
         return $stmt->execute();

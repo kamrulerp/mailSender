@@ -19,6 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $confirm_password = $_POST['confirm_password'] ?? '';
     $role = $_POST['role'] ?? 'user';
     $status = $_POST['status'] ?? 'active';
+    $country = $_POST['country'] ?? null;
+    $categories = $_POST['category'] ?? []; // Array of selected categories
     
     // Validation
     if (empty($full_name)) {
@@ -34,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif ($current_user['role'] == 'admin' && $role == 'super_admin') {
         $error_message = 'Admin users cannot create Super Admin accounts';
     } else {
-        $result = $userManager->createUser($full_name, $email, $password, $role, $status);
+        $result = $userManager->createUser($full_name, $email, $password, $role, $status, $country, $categories);
         
         if ($result) {
             $success_message = 'User created successfully';
@@ -42,6 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $full_name = $email = $password = $confirm_password = '';
             $role = 'user';
             $status = 'active';
+            $country = null;
+            $categories = [];
         } else {
             $error_message = 'Error creating user';
         }
@@ -217,6 +221,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="country" class="form-label">Country</label>
+                                                <select class="form-select" id="country" name="country">
+                                                    <option value="">Select Country</option>
+                                                    <?php
+                                                    $countries = $auth->getCountryList();
+                                                    foreach ($countries as $country):
+                                                    ?>
+                                                    <option value="<?php echo $country; ?>" <?php echo (isset($country_selected) && $country_selected == $country) ? 'selected' : ''; ?>><?php echo $country; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="category" class="form-label">Categories</label>
+                                                <select class="form-select" id="category" name="category[]" multiple size="7">
+                                                    <?php
+                                                    $categories = $auth->getCategoryList();
+                                                    foreach ($categories as $category):
+                                                    ?>
+                                                    <option value="<?php echo $category; ?>" <?php echo (isset($category_selected) && in_array($category, $category_selected ?? [])) ? 'selected' : ''; ?>><?php echo $category; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <div class="form-text">Hold Ctrl/Cmd to select multiple categories</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- country and category -->
+
                                 </div>
                                 <div class="card-footer">
                                     <button type="submit" class="btn btn-success">

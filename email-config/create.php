@@ -22,6 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $encryption = $_POST['encryption'];
     $from_email = trim($_POST['from_email']);
     $from_name = trim($_POST['from_name']);
+    $country = $_POST['country'];
+    $category = $_POST['category'];
     $status = $_POST['status'];
     
     // Validation
@@ -55,6 +57,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors[] = 'From name is required';
     }
     
+    if (empty($country)) {
+        $errors[] = 'Country is required';
+    }
+    
+    if (empty($category)) {
+        $errors[] = 'Category is required';
+    }
+    
     if (empty($errors)) {
         $config_id = $emailConfig->createConfig(
             $config_name,
@@ -65,6 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $encryption,
             $from_email,
             $from_name,
+            $country,
+            $category,
             $status,
             $user['id']
         );
@@ -230,6 +242,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                 <label for="from_name">From Name *</label>
                                                 <input type="text" class="form-control" id="from_name" name="from_name" 
                                                        value="<?php echo isset($_POST['from_name']) ? htmlspecialchars($_POST['from_name']) : ''; ?>" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h5 class="mt-4 mb-3">Additional Settings</h5>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="country">Country *</label>
+                                                <input type="text" class="form-control" id="country" name="country" 
+                                                       value="<?php echo isset($_POST['country']) ? htmlspecialchars($_POST['country']) : ''; ?>" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="category">Category *</label>
+                                                <input type="text" class="form-control" id="category" name="category" 
+                                                       value="<?php echo isset($_POST['category']) ? htmlspecialchars($_POST['category']) : ''; ?>" required>
                                             </div>
                                         </div>
                                     </div>

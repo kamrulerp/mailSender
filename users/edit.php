@@ -45,9 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($error_message)) {
         $error_message = 'Name is required';
     } elseif (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error_message = 'Valid email address is required';
-    } elseif ($userManager->emailExists($email, $user_id)) {
-        $error_message = 'Email address already exists';
-    } elseif (!empty($password) && strlen($password) < 6) {
+    }elseif (!empty($password) && strlen($password) < 6) {
         $error_message = 'Password must be at least 6 characters long';
     } elseif (!empty($password) && $password !== $confirm_password) {
         $error_message = 'Passwords do not match';
@@ -178,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($error_message)) {
                             <div class="card-header">
                                 <h3 class="card-title">
                                     <i class="fas fa-user-edit mr-1"></i>
-                                    Edit User: <?php echo htmlspecialchars($user['name']); ?>
+                                    Edit User: <?php echo htmlspecialchars($user['full_name']); ?>
                                 </h3>
                                 <div class="card-tools">
                                     <a href="index.php" class="btn btn-secondary btn-sm">
@@ -192,17 +190,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($error_message)) {
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="user-avatar">
-                                            <?php echo strtoupper(substr($user['name'], 0, 1)); ?>
+                                            <?php echo strtoupper(substr($user['full_name'], 0, 1)); ?>
                                         </div>
                                     </div>
                                     <div class="col-md-10">
-                                        <h5><?php echo htmlspecialchars($user['name']); ?></h5>
+                                        <h5><?php echo htmlspecialchars($user['full_name']); ?></h5>
                                         <p class="text-muted mb-1"><?php echo htmlspecialchars($user['email']); ?></p>
                                         <p class="text-muted mb-0">
                                             <strong>Created:</strong> <?php echo date('M d, Y H:i A', strtotime($user['created_at'])); ?>
-                                            <?php if ($user['last_login']): ?>
-                                                | <strong>Last Login:</strong> <?php echo date('M d, Y H:i A', strtotime($user['last_login'])); ?>
-                                            <?php endif; ?>
+                                            
                                         </p>
                                     </div>
                                 </div>
@@ -287,6 +283,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($error_message)) {
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="country" class="form-label">Country</label>
+                                                <select class="form-select" id="country" name="country">
+                                                    <option value="">Select Country</option>
+                                                    <?php
+                                                    $countries = $auth->getCountryList();
+                                                    foreach ($countries as $country):
+                                                    ?>
+                                                    <option value="<?php echo $country; ?>" <?php echo (isset($user['country']) && $user['country'] == $country) ? 'selected' : ''; ?>><?php echo $country; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="category" class="form-label">Categories</label>
+                                                <select class="form-select" id="category" name="category[]" multiple size="7">
+                                                    <?php
+                                                    $categories = $auth->getCategoryList();
+                                                    $user_categories = $user['categories'] ?? [];
+                                                    foreach ($categories as $category):
+                                                    ?>
+                                                    <option value="<?php echo $category; ?>" <?php echo in_array($category, $user_categories) ? 'selected' : ''; ?>><?php echo $category; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <div class="form-text">Hold Ctrl/Cmd to select multiple categories</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- country and category-->
                                 </div>
                                 <div class="card-footer">
                                     <button type="submit" class="btn btn-success">
@@ -348,20 +376,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($error_message)) {
                                     </div>
                                 </div>
                                 
-                                <table class="table table-sm">
-                                    <tr>
-                                        <td><strong>Created:</strong></td>
-                                        <td><?php echo date('M d, Y', strtotime($user['created_at'])); ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Updated:</strong></td>
-                                        <td><?php echo $user['updated_at'] ? date('M d, Y', strtotime($user['updated_at'])) : 'Never'; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Last Login:</strong></td>
-                                        <td><?php echo $user['last_login'] ? date('M d, Y', strtotime($user['last_login'])) : 'Never'; ?></td>
-                                    </tr>
-                                </table>
                                 
                                 <a href="../mail/history.php?user_id=<?php echo $user['id']; ?>" class="btn btn-info btn-sm w-100">
                                     <i class="fas fa-envelope"></i> View Email History

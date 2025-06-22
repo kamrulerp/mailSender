@@ -11,24 +11,67 @@ class User {
     }
 
     public function getAllUsers($limit = 50, $offset = 0) {
-        $query = "SELECT id, username, email, role, full_name, designation, status, created_at FROM " . $this->table_name . " ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
+        $query = "SELECT id, username, email, role, full_name, designation, status, country, categories, created_at FROM " . $this->table_name . " ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Decode JSON categories for each user
+        foreach ($users as &$user) {
+            $user['categories'] = json_decode($user['categories'], true) ?? [];
+        }
+        return $users;
     }
 
     public function getUserById($id) {
-        $query = "SELECT id, username, email, role, full_name, designation, status, created_at FROM " . $this->table_name . " WHERE id = :id";
+        $query = "SELECT id, username, email, role, full_name, designation, status, country, categories, created_at FROM " . $this->table_name . " WHERE id = :id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($user) {
+            $user['categories'] = json_decode($user['categories'], true) ?? [];
+        }
+        return $user;
     }
 
-    public function updateUser($id, $username, $email, $role, $full_name, $designation, $status) {
-        $query = "UPDATE " . $this->table_name . " SET username = :username, email = :email, role = :role, full_name = :full_name, designation = :designation, status = :status WHERE id = :id";
+    public function createUser($full_name, $email, $password, $role, $status, $country = null, $categories = []) {
+        // Check if email already exists
+        $check_query = "SELECT id FROM " . $this->table_name . " WHERE email = :email";
+        $check_stmt = $this->conn->prepare($check_query);
+        $check_stmt->bindParam(':email', $email);
+        $check_stmt->execute();
+
+        if ($check_stmt->rowCount() > 0) {
+            return false; // User already exists
+        }
+
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $username = $email; // Use email as username
+        $categories_json = json_encode($categories);
+        
+        $query = "INSERT INTO " . $this->table_name . " (username, email, password, role, full_name, status, country, categories) VALUES (:username, :email, :password, :role, :full_name, :status, :country, :categories)";
+        $stmt = $this->conn->prepare($query);
+        
+        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':password', $hashed_password);
+        $stmt->bindParam(':role', $role);
+        $stmt->bindParam(':full_name', $full_name);
+        $stmt->bindParam(':status', $status);
+        $stmt->bindParam(':country', $country);
+        $stmt->bindParam(':categories', $categories_json);
+
+        return $stmt->execute();
+    }
+
+    public function updateUser($id, $username, $email, $role, $full_name, $designation, $status, $country = null, $categories = []) {
+        $categories_json = json_encode($categories);
+        
+        $query = "UPDATE " . $this->table_name . " SET username = :username, email = :email, role = :role, full_name = :full_name, designation = :designation, status = :status, country = :country, categories = :categories WHERE id = :id";
         $stmt = $this->conn->prepare($query);
         
         $stmt->bindParam(':id', $id);
@@ -38,6 +81,8 @@ class User {
         $stmt->bindParam(':full_name', $full_name);
         $stmt->bindParam(':designation', $designation);
         $stmt->bindParam(':status', $status);
+        $stmt->bindParam(':country', $country);
+        $stmt->bindParam(':categories', $categories_json);
 
         return $stmt->execute();
     }
@@ -94,31 +139,7 @@ class User {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function createUser($full_name, $email, $password, $role, $status) {
-        // Check if email already exists
-        $check_query = "SELECT id FROM " . $this->table_name . " WHERE email = :email";
-        $check_stmt = $this->conn->prepare($check_query);
-        $check_stmt->bindParam(':email', $email);
-        $check_stmt->execute();
-
-        if ($check_stmt->rowCount() > 0) {
-            return false; // User already exists
-        }
-
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $username = $email; // Use email as username
-        $query = "INSERT INTO " . $this->table_name . " (username, email, password, role, full_name, status) VALUES (:username, :email, :password, :role, :full_name, :status)";
-        $stmt = $this->conn->prepare($query);
-        
-        $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':password', $hashed_password);
-        $stmt->bindParam(':role', $role);
-        $stmt->bindParam(':full_name', $full_name);
-        $stmt->bindParam(':status', $status);
-
-        return $stmt->execute();
-    }
+    
 
     public function updateUserProfile($id, $full_name, $email, $password = null) {
         if ($password) {
