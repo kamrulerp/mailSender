@@ -32,6 +32,23 @@ if ($template && $template['status'] == 'active') {
         $content = str_replace('{{passport_number}}', $_POST['passport_number'], $content);
     }
     
+    if (isset($_POST['location'])) {
+        $content = str_replace('{{address}}', $_POST['location'], $content);
+    }
+
+    if(isset($_POST['designation'])){
+        $content = str_replace('{{designation}}', $_POST['designation'], $content);
+    }
+    if(isset($_POST['company_name'])){
+        $content = str_replace('{{company}}', $_POST['company_name'], $content);
+    }
+    if(isset($_POST['salary'])){
+        $content = str_replace('{{salary}}', $_POST['salary'], $content);
+    }
+    if(isset($_POST['date'])){
+        $content = str_replace('{{date}}', $_POST['date'], $content);
+    }
+    
     echo json_encode([
         'success' => true,
         'content' => $content,

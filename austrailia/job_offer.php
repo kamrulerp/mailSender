@@ -149,20 +149,55 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     
                                     <div class="form-group">
                                         <label for="subject">Subject <span class="text-danger">*</span></label>
-                                        <input type="text" readonly class="form-control" id="subject" name="subject"  value="<?php echo htmlspecialchars($_POST['subject'] ?? 'ACKNOWLEDGEMENT FOR APPLICATION SUBMITTED'); ?>" required>
+                                        <input type="text" readonly class="form-control" id="subject" name="subject"  value="<?php echo htmlspecialchars($_POST['subject'] ?? 'JOB OFFER FOR AUSTRALIAN WORK VISA SPONSORSHIP'); ?>" required>
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="recipient_name">Receiver Name<span class="text-danger">*</span></label>
                                                 <input type="text" required class="form-control" id="recipient_name" name="recipient_name" placeholder="" value="<?php echo htmlspecialchars($_POST['recipient_name'] ?? ''); ?>">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="passport_number">Passport Number<span class="text-danger">*</span></label>
                                                 <input type="text" required class="form-control" id="passport_number" name="passport_number"  value="<?php echo htmlspecialchars($_POST['passport_number'] ?? ''); ?>">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="date">Date<span class="text-danger">*</span></label>
+                                                <input type="date" required class="form-control" id="date" name="date" placeholder="" value="<?php echo htmlspecialchars($_POST['date'] ?? ''); ?>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="designation">Designation<span class="text-danger">*</span></label>
+                                                <input type="text" required class="form-control" id="designation" name="designation" placeholder="Enter designation" value="<?php echo htmlspecialchars($_POST['designation'] ?? ''); ?>">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="company_name">Company Name<span class="text-danger">*</span></label>
+                                                <input type="text" required class="form-control" id="company_name" name="company_name" placeholder="Enter company name" value="<?php echo htmlspecialchars($_POST['company_name'] ?? ''); ?>">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="salary">Salary<span class="text-danger">*</span></label>
+                                                <input type="text" required class="form-control" id="salary" name="salary" placeholder="Enter salary" value="<?php echo htmlspecialchars($_POST['salary'] ?? ''); ?>">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label for="location">Location<span class="text-danger">*</span></label>
+                                                <input type="text" required class="form-control" id="location" name="location" placeholder="Enter location" value="<?php echo htmlspecialchars($_POST['location'] ?? ''); ?>">
                                             </div>
                                         </div>
                                     </div>
@@ -174,7 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                 <select class="form-control" id="template_id" name="template_id">
                                                     <option value="">Select Template (Optional)</option>
                                                     <?php foreach ($templates as $template): ?>
-                                                        <option value="<?php echo $template['id']; ?>" <?php echo ((!isset($_POST['template_id']) && $template['id'] == 6) || (isset($_POST['template_id']) && $_POST['template_id'] == $template['id'])) ? 'selected' : ''; ?>>
+                                                        <option value="<?php echo $template['id']; ?>" <?php echo ($template['id'] == 8)  ? 'selected' : ''; ?>>
                                                             <?php echo htmlspecialchars($template['title']); ?>
                                                         </option>
                                                     <?php endforeach; ?>
@@ -276,7 +311,7 @@ $(document).ready(function() {
     });
     
     // Auto-select template ID 6 and load it on page load
-    $('#template_id').val('6');
+    $('#template_id').val('8');
     loadTemplateWithVariables();
     
     // Function to load template with current variable values
@@ -285,6 +320,13 @@ $(document).ready(function() {
         if (templateId) {
             var recipientName = $('#recipient_name').val();
             var passportNumber = $('#passport_number').val();
+            var location = $('#location').val();
+            var designation = $('#designation').val();
+            var companyName = $('#company_name').val();
+            var salary = $('#salary').val();
+            var dateInput = $('#date').val();
+            var dateObj = new Date(dateInput);
+            var date = dateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
             
             $.ajax({
                 url: 'get_template.php',
@@ -292,7 +334,12 @@ $(document).ready(function() {
                 data: { 
                     template_id: templateId,
                     recipient_name: recipientName,
-                    passport_number: passportNumber
+                    passport_number: passportNumber,
+                    location: location,
+                    designation: designation,
+                    company_name: companyName,
+                    salary: salary,
+                    date: date,
                 },
                 dataType: 'json',
                 success: function(response) {
@@ -310,7 +357,7 @@ $(document).ready(function() {
     }
     
     // Real-time variable replacement on keyup
-    $('#recipient_name, #passport_number').on('keyup input', function() {
+    $('#recipient_name, #passport_number, #location, #designation, #company_name, #salary, #date').on('keyup input', function() {
         // Only reload if template is already selected
         if ($('#template_id').val()) {
             loadTemplateWithVariables();

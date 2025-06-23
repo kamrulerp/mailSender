@@ -75,7 +75,7 @@
                     <ul class="nav nav-treeview">
                         <?php if ($auth->canAccessCategoryMenu('File Submission')): ?>
                         <li class="nav-item">
-                            <a href="../austrailia/file_submission.php?country=Australia&category=File Submission" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'file_submission.php') ? 'active' : ''; ?>">
+                            <a href="../austrailia/file_submission.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'file_submission.php') ? 'active' : ''; ?>">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>File Submission</p>
                             </a>
@@ -83,7 +83,7 @@
                         <?php endif; ?>
                         <?php if ($auth->canAccessCategoryMenu('Payment Received')): ?>
                         <li class="nav-item">
-                            <a href="../mail/send.php?country=Australia&category=Payment Received" class="nav-link">
+                            <a href="../austrailia/payment_receive.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'payment_receive.php') ? 'active' : ''; ?>">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Payment Receive</p>
                             </a>
@@ -91,7 +91,7 @@
                         <?php endif; ?>
                         <?php if ($auth->canAccessCategoryMenu('Job Offer letter')): ?>
                         <li class="nav-item">
-                            <a href="../mail/send.php?country=Australia&category=Job Offer letter" class="nav-link">
+                            <a href="../austrailia/job_offer.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'job_offer.php') ? 'active' : ''; ?>">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Job Offer Letter</p>
                             </a>
@@ -99,7 +99,7 @@
                         <?php endif; ?>
                         <?php if ($auth->canAccessCategoryMenu('Required Documents')): ?>
                         <li class="nav-item">
-                            <a href="../mail/send.php?country=Australia&category=Required Documents" class="nav-link">
+                            <a href="../austrailia/required_documents.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'required_documents.php') ? 'active' : ''; ?>">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Required documents</p>
                             </a>
@@ -107,7 +107,7 @@
                         <?php endif; ?>
                         <?php if ($auth->canAccessCategoryMenu('Normal Rejection')): ?>
                         <li class="nav-item">
-                            <a href="../mail/send.php?country=Australia&category=Normal Rejection" class="nav-link">
+                            <a href="../austrailia/normal_rejection.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'normal_rejection.php') ? 'active' : ''; ?>">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Normal Rejection</p>
                             </a>
@@ -115,7 +115,7 @@
                         <?php endif; ?>
                         <?php if ($auth->canAccessCategoryMenu('Notary Error Rejection')): ?>
                         <li class="nav-item">
-                            <a href="../mail/send.php?country=Australia&category=Notary Error Rejection" class="nav-link">
+                            <a href="../austrailia/notary_error_rejection.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'notary_error_rejection.php') ? 'active' : ''; ?>">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Notarry Error Rejection</p>
                             </a>
@@ -123,7 +123,7 @@
                         <?php endif; ?>
                         <?php if ($auth->canAccessCategoryMenu('Company Rejection')): ?>
                         <li class="nav-item">
-                            <a href="../mail/send.php?country=Australia&category=Company Rejection" class="nav-link">
+                            <a href="../austrailia/company_rejection.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'company_rejection.php') ? 'active' : ''; ?>">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Company Rejection</p>
                             </a>

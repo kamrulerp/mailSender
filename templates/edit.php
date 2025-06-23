@@ -64,7 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- AdminLTE -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     <!-- Summernote -->
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs5.min.css" rel="stylesheet">
+    <!-- Replace line 62 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css">
     
     <style>
         .content-wrapper {
@@ -141,35 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </div>
                             <form method="post" action="">
                                 <div class="card-body">
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <div class="card bg-light">
-                                                <div class="card-body">
-                                                    <h6 class="card-title">Template Information</h6>
-                                                    <p class="card-text">
-                                                        <strong>Created by:</strong> <?php echo htmlspecialchars($template['created_by_name'] ?? 'Unknown'); ?><br>
-                                                        <strong>Created at:</strong> <?php echo date('M d, Y H:i A', strtotime($template['created_at'])); ?><br>
-                                                        <?php if ($template['updated_at']): ?>
-                                                            <strong>Last updated:</strong> <?php echo date('M d, Y H:i A', strtotime($template['updated_at'])); ?>
-                                                        <?php endif; ?>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="card bg-light">
-                                                <div class="card-body">
-                                                    <h6 class="card-title">Quick Actions</h6>
-                                                    <button type="button" class="btn btn-info btn-sm" onclick="previewTemplate()">
-                                                        <i class="fas fa-eye"></i> Preview
-                                                    </button>
-                                                    <button type="button" class="btn btn-secondary btn-sm" onclick="duplicateTemplate(<?php echo $template['id']; ?>)">
-                                                        <i class="fas fa-copy"></i> Duplicate
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    
                                     
                                     <div class="row">
                                         <div class="col-md-8">
@@ -192,7 +165,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     
                                     <div class="mb-3">
                                         <label for="content" class="form-label">Template Content <span class="text-danger">*</span></label>
-                                        <textarea id="content" name="content" class="form-control"><?php echo htmlspecialchars($template['content']); ?></textarea>
+                                        <textarea id="content" name="content" class="form-control summernote"><?php echo htmlspecialchars($template['content']); ?></textarea>
                                         <div class="form-text">Use the rich text editor to modify your email template. You can include HTML formatting, images, and links.</div>
                                     </div>
                                     
@@ -215,27 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="card bg-light">
-                                                <div class="card-header">
-                                                    <h5 class="card-title mb-0">Insert Elements</h5>
-                                                </div>
-                                                <div class="card-body">
-                                                    <button type="button" class="btn btn-outline-primary btn-sm mb-2" onclick="insertVariable('{{recipient_name}}')">
-                                                        <i class="fas fa-plus"></i> Recipient Name
-                                                    </button>
-                                                    <button type="button" class="btn btn-outline-primary btn-sm mb-2" onclick="insertVariable('{{sender_name}}')">
-                                                        <i class="fas fa-plus"></i> Sender Name
-                                                    </button>
-                                                    <button type="button" class="btn btn-outline-primary btn-sm mb-2" onclick="insertVariable('{{current_date}}')">
-                                                        <i class="fas fa-plus"></i> Current Date
-                                                    </button>
-                                                    <button type="button" class="btn btn-outline-secondary btn-sm mb-2" onclick="insertHorizontalRule()">
-                                                        <i class="fas fa-minus"></i> Horizontal Line
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                     </div>
                                 </div>
                                 <div class="card-footer">
@@ -285,8 +238,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-<!-- Summernote -->
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs5.min.js"></script>
+<!-- Image Upload -->
+<!-- Replace line 342 -->
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 
 <script>
 $(document).ready(function() {
@@ -323,34 +277,7 @@ function insertHorizontalRule() {
     $('#content').summernote('insertNode', document.createElement('hr'));
 }
 
-function previewTemplate() {
-    const title = $('#title').val();
-    const content = $('#content').summernote('code');
-    
-    if (!title || !content) {
-        alert('Please enter both title and content before previewing.');
-        return;
-    }
-    
-    // Replace template variables with sample data for preview
-    let previewContent = content
-        .replace(/{{recipient_name}}/g, 'John Doe')
-        .replace(/{{recipient_email}}/g, 'john.doe@example.com')
-        .replace(/{{sender_name}}/g, '<?php echo htmlspecialchars($user['name']); ?>')
-        .replace(/{{sender_designation}}/g, 'Sample Designation')
-        .replace(/{{current_date}}/g, new Date().toLocaleDateString())
-        .replace(/{{current_time}}/g, new Date().toLocaleTimeString());
-    
-    $('#previewModalBody').html(`
-        <h4>${title}</h4>
-        <hr>
-        <div class="border p-3" style="background-color: #f8f9fa;">
-            ${previewContent}
-        </div>
-    `);
-    
-    $('#previewModal').modal('show');
-}
+
 
 function duplicateTemplate(templateId) {
     if (confirm('Are you sure you want to duplicate this template?')) {

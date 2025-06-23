@@ -149,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     
                                     <div class="form-group">
                                         <label for="subject">Subject <span class="text-danger">*</span></label>
-                                        <input type="text" readonly class="form-control" id="subject" name="subject"  value="<?php echo htmlspecialchars($_POST['subject'] ?? 'ACKNOWLEDGEMENT FOR APPLICATION SUBMITTED'); ?>" required>
+                                        <input type="text" readonly class="form-control" id="subject" name="subject"  value="<?php echo htmlspecialchars($_POST['subject'] ?? 'NOTIFICATION OF REJECTION OF YOUR WORK PERMIT APPLICATION'); ?>" required>
                                     </div>
 
                                     <div class="row">
@@ -174,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                 <select class="form-control" id="template_id" name="template_id">
                                                     <option value="">Select Template (Optional)</option>
                                                     <?php foreach ($templates as $template): ?>
-                                                        <option value="<?php echo $template['id']; ?>" <?php echo ((!isset($_POST['template_id']) && $template['id'] == 6) || (isset($_POST['template_id']) && $_POST['template_id'] == $template['id'])) ? 'selected' : ''; ?>>
+                                                        <option value="<?php echo $template['id']; ?>" <?php echo ($template['id'] == 10)  ? 'selected' : ''; ?>>
                                                             <?php echo htmlspecialchars($template['title']); ?>
                                                         </option>
                                                     <?php endforeach; ?>
@@ -276,7 +276,7 @@ $(document).ready(function() {
     });
     
     // Auto-select template ID 6 and load it on page load
-    $('#template_id').val('6');
+    $('#template_id').val('10');
     loadTemplateWithVariables();
     
     // Function to load template with current variable values
