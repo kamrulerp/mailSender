@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $smtp_username = trim($_POST['smtp_username']);
     $smtp_password = $_POST['smtp_password'];
     $encryption = $_POST['encryption'];
-    $from_email = trim($_POST['from_email']);
+    $cc_mail = trim($_POST['cc_mail']);
     $from_name = trim($_POST['from_name']);
     $country = $_POST['country'];
     $category = $_POST['category'];
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors[] = 'SMTP password is required';
     }
     
-    if (empty($from_email) || !filter_var($from_email, FILTER_VALIDATE_EMAIL)) {
+    if (empty($cc_mail) || !filter_var($cc_mail, FILTER_VALIDATE_EMAIL)) {
         $errors[] = 'Valid from email is required';
     }
     
@@ -73,7 +73,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $smtp_username,
             $smtp_password,
             $encryption,
-            $from_email,
+            $smtp_username,
+            $cc_mail,
             $from_name,
             $country,
             $category,
@@ -232,9 +233,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="from_email">From Email *</label>
-                                                <input type="email" class="form-control" id="from_email" name="from_email" 
-                                                       value="<?php echo isset($_POST['from_email']) ? htmlspecialchars($_POST['from_email']) : ''; ?>" required>
+                                                <label for="cc_mail">CC Email *</label>
+                                                <input type="email" class="form-control" id="cc_mail" name="cc_mail" 
+                                                       value="<?php echo isset($_POST['cc_mail']) ? htmlspecialchars($_POST['cc_mail']) : ''; ?>" required>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -272,9 +273,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <a href="index.php" class="btn btn-secondary">
                                         <i class="fas fa-times"></i> Cancel
                                     </a>
-                                    <button type="button" class="btn btn-info" onclick="testConnection()">
-                                        <i class="fas fa-plug"></i> Test Connection
-                                    </button>
                                 </div>
                             </form>
                         </div>

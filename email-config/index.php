@@ -157,9 +157,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'test' && isset($_GET['id'])) {
                                             <a href="?action=test&id=<?php echo $config['id']; ?>" class="btn btn-secondary btn-sm" title="Test Connection">
                                                 <i class="fas fa-plug"></i>
                                             </a>
-                                            <button type="button" class="btn btn-danger btn-sm" title="Delete" onclick="confirmDelete(<?php echo $config['id']; ?>)">
+                                            <!-- <button type="button" class="btn btn-danger btn-sm" title="Delete" onclick="confirmDelete(<?php echo $config['id']; ?>)">
                                                 <i class="fas fa-trash"></i>
-                                            </button>
+                                            </button> -->
                                         </div>
                                     </td>
                                 </tr>

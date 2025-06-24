@@ -34,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $smtp_username = trim($_POST['smtp_username']);
     $smtp_password = $_POST['smtp_password'];
     $encryption = $_POST['encryption'];
+    $cc_mail = trim($_POST['cc_mail']);
     $from_name = trim($_POST['from_name']);
     $country = $_POST['country'];
     $category = $_POST['category'];
@@ -58,6 +59,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors[] = 'SMTP username is required';
     }
     
+    if (empty($cc_mail) || !filter_var($cc_mail, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = 'Valid from email is required';
+    }
     
     if (empty($from_name)) {
         $errors[] = 'From name is required';
@@ -72,12 +76,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $result = $emailConfig->updateConfig(
             $config_id,
             $config_name,
+            $smtp_username,
             $smtp_host,
             $smtp_port,
             $smtp_username,
             $smtp_password,
             $encryption,
-            $from_email,
+            $cc_mail,
             $from_name,
             $country,
             $category,
@@ -237,14 +242,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <h5 class="mt-4 mb-3">From Settings</h5>
                                     
                                     <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="from_name">From Name *</label>
-                                                <input type="text" class="form-control" id="from_name" name="from_name" 
-                                                       value="<?php echo isset($_POST['from_name']) ? htmlspecialchars($_POST['from_name']) : htmlspecialchars($config['from_name']); ?>" required>
-                                            </div>
-                                        </div>
-                                    </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="cc_mail">CC Mail *</label>
+                                <input type="email" class="form-control" id="cc_mail" name="cc_mail"    
+                                       value="<?php echo isset($_POST['cc_mail']) ? htmlspecialchars($_POST['cc_mail']) : htmlspecialchars($config['cc_mail']); ?>" >
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="from_name">From Name *</label>
+                                <input type="text" class="form-control" id="from_name" name="from_name" 
+                                       value="<?php echo isset($_POST['from_name']) ? htmlspecialchars($_POST['from_name']) : htmlspecialchars($config['from_name']); ?>" required>
+                            </div>
+                        </div>
+                    </div>
                                     <h5 class="mt-4 mb-3">Additional Settings</h5>
                                     <div class="row">
                                         <div class="col-md-6">
@@ -283,9 +295,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <a href="view_config.php?id=<?php echo $config['id']; ?>" class="btn btn-info">
                                         <i class="fas fa-eye"></i> View
                                     </a>
-                                    <button type="button" class="btn btn-warning" onclick="testConnection()">
-                                        <i class="fas fa-plug"></i> Test Connection
-                                    </button>
                                 </div>
                             </form>
                         </div>

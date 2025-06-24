@@ -47,6 +47,7 @@ class MailSender {
             $mail = new PHPMailer(true);
 
             // Server settings
+            $cc_mail = $config['cc_mail'];
             $mail->isSMTP();
             $mail->Host = $config['smtp_host'];
             $mail->SMTPAuth = true;
@@ -78,6 +79,17 @@ class MailSender {
             // Recipients
             $mail->setFrom($config['email_address'], $config['from_name']);
             $mail->addAddress($to_email);
+            
+            // Add CC if configured
+            if (!empty($cc_mail)) {
+                $cc_emails = explode(',', $cc_mail);
+                foreach ($cc_emails as $cc_email) {
+                    $cc_email = trim($cc_email);
+                    if (!empty($cc_email) && filter_var($cc_email, FILTER_VALIDATE_EMAIL)) {
+                        $mail->addCC($cc_email);
+                    }
+                }
+            }
 
             // Content
             $mail->isHTML(true);
