@@ -133,9 +133,10 @@ class Auth {
     public function getCountryList() {
         return [
             'Australia',
-            'United States',
-            'United Kingdom',
-            
+            'Newzealand',
+            'Denmark',
+            'Canada',
+            'Ireland'
         ];
     }
 
