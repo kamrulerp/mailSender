@@ -116,11 +116,12 @@ class EmailConfig {
             if ($mail->smtpConnect()) {
                 $mail->smtpClose();
                 return ['success' => true, 'message' => 'Connection successful'];
-            } else {
-                return ['success' => false, 'message' => 'Failed to connect to SMTP server'];
-            }
+            } 
+            // else {
+            //     return ['success' => false, 'message' => 'Failed to connect to SMTP server'];
+            // }
         } catch (Exception $e) {
-            return ['success' => false, 'message' => 'Connection failed: ' . $e->getMessage()];
+            return ['success' => false, 'message' => 'Connection failed:' . $e->getMessage()];
         }
     }
 }
